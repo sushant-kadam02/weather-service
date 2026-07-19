@@ -3,6 +3,7 @@ package com.sk.weather_service.service;
 
 import com.sk.weather_service.entity.Weather;
 import com.sk.weather_service.repository.WeatherRepository;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class WeatherService {
     }
 
 
-    @Cacheable("weather")
+    @Cacheable(value = "weather", key = "#city")
     public String getWeatherByCity(String city) {
         System.out.println("Fetching weather for city : "+city);
         Optional<Weather> weather = weatherRepository.findByCity(city);
@@ -32,5 +33,14 @@ public class WeatherService {
 
     public List<Weather> getAllWeather() {
         return weatherRepository.findAll();
+    }
+
+    @CachePut(value = "weather", key = "#city")
+    public String updateWeather(String city, String updateWeather) {
+        weatherRepository.findByCity(city).ifPresent(x -> {
+            x.setForecast(updateWeather);
+            weatherRepository.save(x);
+        });
+        return updateWeather;
     }
 }

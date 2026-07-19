@@ -11,4 +11,5 @@ public interface WeatherRepository extends MongoRepository<Weather, Long> {
 
 
     Optional<Weather> findByCity(String city);
+    void deleteByCity(String city);
 }

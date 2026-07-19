@@ -43,4 +43,10 @@ public class WeatherController {
     public String updateWeather(@PathVariable String city, @RequestParam String updateWeather) {
                 return weatherService.updateWeather(city, updateWeather);
     }
+
+    @DeleteMapping("/{city}")
+    public String deleteByCity(@PathVariable String city) {
+        weatherService.deleteByCity(city);
+        return city +" record deleted.";
+    }
 }

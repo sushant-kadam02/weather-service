@@ -3,9 +3,11 @@ package com.sk.weather_service.service;
 
 import com.sk.weather_service.entity.Weather;
 import com.sk.weather_service.repository.WeatherRepository;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,5 +44,11 @@ public class WeatherService {
             weatherRepository.save(x);
         });
         return updateWeather;
+    }
+
+    @Transactional
+    @CacheEvict(value = "weather", key = "#city")
+    public void deleteByCity(String city) {
+        weatherRepository.deleteByCity(city);
     }
 }
